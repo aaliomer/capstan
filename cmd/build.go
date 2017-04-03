@@ -33,7 +33,7 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 	if err := os.MkdirAll(filepath.Dir(r.ImagePath(image.Hypervisor, image.Name)), 0777); err != nil {
 		return err
 	}
-	fmt.Printf("Building %s in directory %s (pwd %s)...\n", image.Name, filepath.Dir(r.ImagePath(image.Hypervisor, image.Name), filepath.Abs(filepath.Dir(os.Args[0]))))
+	fmt.Printf("Building %s in directory %s ...\n", image.Name, filepath.Dir(r.ImagePath(image.Hypervisor, image.Name), filepath.Abs(filepath.Dir(os.Args[0]))))
 	//if it has a build script
 	if template.Build != "" {
 		args := strings.Fields(template.Build)
