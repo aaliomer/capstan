@@ -27,6 +27,7 @@ const (
 )
 
 func main() {
+	fmt.Println("welcome to capstan")
 	app := cli.NewApp()
 	app.Name = "capstan"
 	app.Version = VERSION

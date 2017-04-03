@@ -28,34 +28,44 @@ import (
 )
 
 func Build(r *util.Repo, image *core.Image, template *core.Template, verbose bool, mem string) error {
+	//create the image directory
 	if err := os.MkdirAll(filepath.Dir(r.ImagePath(image.Hypervisor, image.Name)), 0777); err != nil {
 		return err
 	}
-	fmt.Printf("Building %s...\n", image.Name)
+	fmt.Printf("Building %s in directory %s (pwd %s)...\n", image.Name, filepath.Dir(r.ImagePath(image.Hypervisor, image.Name), filepath.Abs(filepath.Dir(os.Args[0])))
+	//if it has a build script
 	if template.Build != "" {
 		args := strings.Fields(template.Build)
 		cmd := exec.Command(args[0], args[1:]...)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
-			fmt.Println(string(out))
+			fmt.Println("Error executing the build command "+ args[0] + " : " + string(out))
 			return err
 		}
 	}
+	//save the file as <img name>.<hypervisor name> in the repo
+	fmt.Println("Checking for image locally", template, r, image.Hypervisor)
 	if err := checkConfig(template, r, image.Hypervisor); err != nil {
 		return err
 	}
 	if template.RpmBase != nil {
 		template.RpmBase.Download()
 	}
+	//we copy the base image to the repository directory
+	fmt.Println("Copying " + r.ImagePath(image.Hypervisor, template.Base))
 	cmd := util.CopyFile(r.ImagePath(image.Hypervisor, template.Base), r.ImagePath(image.Hypervisor, image.Name))
 	_, err := cmd.Output()
 	if err != nil {
 		return err
 	}
+
+	//cpiod is an archive tool
 	cmdline := "/tools/cpiod.so"
 	if verbose {
 		cmdline = "--verbose" + cmdline
 	}
+	//TODO DIG
+	//use qemu-nbd for network block device share
 	if err := SetArgs(r, image.Hypervisor, image.Name, "/tools/cpiod.so"); err != nil {
 		return err
 	}
@@ -67,6 +77,8 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 	if err := UploadFiles(r, image.Hypervisor, image.Name, template, verbose, mem); err != nil {
 		return err
 	}
+	//TODO
+	//HINT: command line is the one executing in the capstan image
 	return SetArgs(r, image.Hypervisor, image.Name, template.Cmdline)
 }
 
@@ -166,6 +178,7 @@ func copyFile(conn net.Conn, src string, dst string) error {
 }
 
 func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template, verbose bool, mem string) error {
+	fmt.Println("UploadFiles with params ","util.Repo: ", r , t, mem )
 	file := r.ImagePath(hypervisor, image)
 	size, err := util.ParseMemSize(mem)
 	if err != nil {
@@ -228,14 +241,14 @@ func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template
 		})
 	}
 
+	fmt.Println("setting file system map", rootfsFiles)
 	fmt.Println("Uploading files...")
-
 	bar := pb.New(len(rootfsFiles) + len(t.Files))
-
+	//TODO REMOVE
+	verbose = true
 	if !verbose {
 		bar.Start()
 	}
-
 	for dst, src := range rootfsFiles {
 		err = copyFile(conn, src, dst)
 		if verbose {
@@ -268,6 +281,7 @@ func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template
 
 func SetArgs(r *util.Repo, hypervisor, image string, args string) error {
 	file := r.ImagePath(hypervisor, image)
+	fmt.Println("Executing command: (SetArgs) qemu-nbd", "-p", "10809", file)
 	cmd := exec.Command("qemu-nbd", "-p", "10809", file)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
@@ -283,11 +297,13 @@ func SetArgs(r *util.Repo, hypervisor, image string, args string) error {
 	}
 	go io.Copy(os.Stdout, stdout)
 	go io.Copy(os.Stderr, stderr)
-
+	fmt.Println("connecting to localhost:10809")
 	conn, err := util.ConnectAndWait("tcp", "localhost:10809")
 	if err != nil {
+		fmt.Println("connection failed", err)
 		return err
 	}
+	fmt.Println("connection successfull")
 
 	session := &nbd.NbdSession{
 		Conn:   conn,
