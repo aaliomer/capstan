@@ -78,6 +78,7 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 	}
 	fmt.Println("uploading files ", image.Hypervisor, image.Name, template, verbose, mem, "-----")
 	if err := UploadFiles(r, image.Hypervisor, image.Name, template, verbose, mem); err != nil {
+		fmt.Println("uploading files Failed with error: ", err)
 		return err
 	}
 	//TODO
@@ -196,6 +197,7 @@ func UploadFiles(r *util.Repo, hypervisor string, image string, t *core.Template
 		NatRules:    []nat.Rule{nat.Rule{GuestPort: "10000", HostPort: "10000"}},
 		BackingFile: false,
 	}
+	fmt.Println("qemu uploading : ", vmconfig)
 	cmd, err := qemu.VMCommand(vmconfig)
 	if err != nil {
 		return err
