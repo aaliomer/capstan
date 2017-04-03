@@ -9,6 +9,12 @@ package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
+
 	"github.com/aaliomer/capstan/core"
 	"github.com/aaliomer/capstan/hypervisor/gce"
 	"github.com/aaliomer/capstan/hypervisor/qemu"
@@ -17,11 +23,6 @@ import (
 	"github.com/aaliomer/capstan/image"
 	"github.com/aaliomer/capstan/nat"
 	"github.com/aaliomer/capstan/util"
-	"io/ioutil"
-	"os"
-	"os/exec"
-	"path/filepath"
-	"strings"
 )
 
 type RunConfig struct {
@@ -142,7 +143,7 @@ func Run(repo *util.Repo, config *RunConfig) error {
 		deleteInstance(config.InstanceName)
 	} else if config.ImageName == "" && config.InstanceName == "" {
 		// Valid only when Capstanfile is present
-		fmt.Println("debug:  no params... Capstanfile is present"
+		fmt.Println("debug:  no params... Capstanfile is present")
 		config.ImageName = repo.DefaultImage()
 		config.InstanceName = config.ImageName
 		if config.ImageName == "" {
