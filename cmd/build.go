@@ -12,12 +12,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/cheggaaa/pb"
-	"github.com/cloudius-systems/capstan/core"
-	"github.com/cloudius-systems/capstan/cpio"
-	"github.com/cloudius-systems/capstan/hypervisor/qemu"
-	"github.com/cloudius-systems/capstan/nat"
-	"github.com/cloudius-systems/capstan/nbd"
-	"github.com/cloudius-systems/capstan/util"
+	"github.com/aaliomer/capstan/core"
+	"github.com/aaliomer/capstan/cpio"
+	"github.com/aaliomer/capstan/hypervisor/qemu"
+	"github.com/aaliomer/capstan/nat"
+	"github.com/aaliomer/capstan/nbd"
+	"github.com/aaliomer/capstan/util"
 	"io"
 	"io/ioutil"
 	"net"
@@ -29,6 +29,7 @@ import (
 
 func Build(r *util.Repo, image *core.Image, template *core.Template, verbose bool, mem string) error {
 	//create the image directory
+	fmt.Println("Custom Build by Jay.. shout out to optum")
 	if err := os.MkdirAll(filepath.Dir(r.ImagePath(image.Hypervisor, image.Name)), 0777); err != nil {
 		return err
 	}

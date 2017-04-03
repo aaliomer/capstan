@@ -9,11 +9,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/cloudius-systems/capstan/hypervisor/gce"
-	"github.com/cloudius-systems/capstan/hypervisor/qemu"
-	"github.com/cloudius-systems/capstan/hypervisor/vbox"
-	"github.com/cloudius-systems/capstan/hypervisor/vmw"
-	"github.com/cloudius-systems/capstan/util"
+	"github.com/aaliomer/capstan/hypervisor/gce"
+	"github.com/aaliomer/capstan/hypervisor/qemu"
+	"github.com/aaliomer/capstan/hypervisor/vbox"
+	"github.com/aaliomer/capstan/hypervisor/vmw"
+	"github.com/aaliomer/capstan/util"
 	"io/ioutil"
 	"path/filepath"
 )

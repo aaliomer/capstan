@@ -9,11 +9,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/cloudius-systems/capstan/cmd"
-	"github.com/cloudius-systems/capstan/core"
-	"github.com/cloudius-systems/capstan/hypervisor"
-	"github.com/cloudius-systems/capstan/nat"
-	"github.com/cloudius-systems/capstan/util"
+	"github.com/aaliomer/capstan/cmd"
+	"github.com/aaliomer/capstan/core"
+	"github.com/aaliomer/capstan/hypervisor"
+	"github.com/aaliomer/capstan/nat"
+	"github.com/aaliomer/capstan/util"
 	"github.com/codegangsta/cli"
 	"os"
 )

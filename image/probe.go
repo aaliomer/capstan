@@ -8,10 +8,10 @@
 package image
 
 import (
-	"github.com/cloudius-systems/capstan/image/gce"
-	"github.com/cloudius-systems/capstan/image/qcow2"
-	"github.com/cloudius-systems/capstan/image/vdi"
-	"github.com/cloudius-systems/capstan/image/vmdk"
+	"github.com/aaliomer/capstan/image/gce"
+	"github.com/aaliomer/capstan/image/qcow2"
+	"github.com/aaliomer/capstan/image/vdi"
+	"github.com/aaliomer/capstan/image/vmdk"
 	"os"
 )
 

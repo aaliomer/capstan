@@ -1,6 +1,6 @@
 #!/bin/sh
 
-package=github.com/cloudius-systems/capstan
+package=github.com/aaliomer/capstan
 version=$(scripts/version)
 
 OLDIFS=$IFS

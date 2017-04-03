@@ -74,20 +74,20 @@ writable Go workspace such as ``$HOME/go``.
 To install Capstan, type:
 
 ```
-$ go get github.com/cloudius-systems/capstan
+$ go get github.com/aaliomer/capstan
 ```
 
 This installs a ``capstan`` executable to your Go workspace so make sure your
 ``PATH`` environment variable includes ``$GOPATH/bin``.
 
-For more detailed information, check out [installation instructions](https://github.com/cloudius-systems/capstan/wiki/Capstan-Installation)
+For more detailed information, check out [installation instructions](https://github.com/aaliomer/capstan/wiki/Capstan-Installation)
 on the wiki.
 
 ### Updating from Sources
 
 To update capstan to the latest version execute the following commands:
 ```sh
-$ cd $GOPATH/src/github.com/cloudius-systems/capstan
+$ cd $GOPATH/src/github.com/aaliomer/capstan
 $ git pull
 $ ./install
 ```
@@ -138,10 +138,10 @@ $ capstan images
 
 Check out the following example projects to get you going:
 
-* [Node.js](https://github.com/cloudius-systems/capstan-example-nodejs)
-* [Java](https://github.com/cloudius-systems/capstan-example-java)
-* [Clojure](https://github.com/cloudius-systems/capstan-example-clojure)
-* [Linux binaries](https://github.com/cloudius-systems/capstan-example)
+* [Node.js](https://github.com/aaliomer/capstan-example-nodejs)
+* [Java](https://github.com/aaliomer/capstan-example-java)
+* [Clojure](https://github.com/aaliomer/capstan-example-clojure)
+* [Linux binaries](https://github.com/aaliomer/capstan-example)
 
 ## Documentation
 
