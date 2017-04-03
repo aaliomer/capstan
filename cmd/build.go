@@ -40,7 +40,7 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 		cmd := exec.Command(args[0], args[1:]...)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
-			fmt.Println("Error executing the build command "+ args[0] + " : " + string(out))
+			fmt.Println("Error executing the build command "+ args[0] + " : " + string(out), "-----")
 			return err
 		}
 	}
@@ -52,7 +52,7 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 		template.RpmBase.Download()
 	}
 	//we copy the base image to the repository directory
-	fmt.Println("Copying " + r.ImagePath(image.Hypervisor, template.Base))
+	fmt.Println("Copying " + r.ImagePath(image.Hypervisor, template.Base), "-----")
 	cmd := util.CopyFile(r.ImagePath(image.Hypervisor, template.Base), r.ImagePath(image.Hypervisor, image.Name))
 	_, err := cmd.Output()
 	if err != nil {
@@ -66,6 +66,7 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 	}
 	//TODO DIG
 	//use qemu-nbd for network block device share
+	fmt.Println("SetArgs",r, image.Hypervisor, image.Name, "/tools/cpiod.so" , "-----")
 	if err := SetArgs(r, image.Hypervisor, image.Name, "/tools/cpiod.so"); err != nil {
 		return err
 	}
@@ -74,11 +75,13 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 			return err
 		}
 	}
+	fmt.Println("uploading files ", , image.Hypervisor, image.Name, template, verbose, mem, "-----")
 	if err := UploadFiles(r, image.Hypervisor, image.Name, template, verbose, mem); err != nil {
 		return err
 	}
 	//TODO
 	//HINT: command line is the one executing in the capstan image
+	fmt.Println("SetArgs",r, image.Hypervisor, image.Name,template.Cmdline, "-----")
 	return SetArgs(r, image.Hypervisor, image.Name, template.Cmdline)
 }
 
