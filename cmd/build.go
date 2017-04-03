@@ -45,7 +45,6 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 		}
 	}
 	//save the file as <img name>.<hypervisor name> in the repo
-	fmt.Println("Checking for image locally", template, r, image.Hypervisor)
 	if err := checkConfig(template, r, image.Hypervisor); err != nil {
 		return err
 	}
