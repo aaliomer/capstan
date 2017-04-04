@@ -9,7 +9,6 @@ package cmd
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -53,7 +52,7 @@ func Build(r *util.Repo, image *core.Image, template *core.Template, verbose boo
 		template.RpmBase.Download()
 	}
 	//we copy the base image to the repository directory
-	fmt.Println("Copying "+r.ImagePath(image.Hypervisor, template.Base), "-----")
+	fmt.Println("Build: putting "+r.ImagePath(image.Hypervisor, template.Base), " as ", r.ImagePath(image.Hypervisor, image.Name), "-----")
 	cmd := util.CopyFile(r.ImagePath(image.Hypervisor, template.Base), r.ImagePath(image.Hypervisor, image.Name))
 	_, err := cmd.Output()
 	if err != nil {
@@ -95,7 +94,7 @@ func checkConfig(t *core.Template, r *util.Repo, hypervisor string) error {
 	}
 	for _, value := range t.Files {
 		if _, err := os.Stat(value); os.IsNotExist(err) {
-			return errors.New(fmt.Sprintf("%s: no such file or directory", value))
+			return fmt.Errorf("%s: no such file or directory", value)
 		}
 	}
 	return nil
