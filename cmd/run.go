@@ -15,6 +15,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"runtime"
+
 	"github.com/aaliomer/capstan/core"
 	"github.com/aaliomer/capstan/hypervisor/gce"
 	"github.com/aaliomer/capstan/hypervisor/qemu"
@@ -42,9 +44,9 @@ type RunConfig struct {
 func Run(repo *util.Repo, config *RunConfig) error {
 	var path string
 	var cmd *exec.Cmd
-	fmt.Println("Running image with params. repo: ", repo, " config: ", config)
+	fmt.Println("Run: image with params. repo: ", repo, " config: ", config, "os: ", runtime.GOOS)
 	// Start an existing instance
-	fmt.Println("debug: Start an existing instance")
+	fmt.Println("Run: Start an existing instance")
 	if config.ImageName == "" && config.InstanceName != "" {
 		instanceName, instancePlatform := util.SearchInstance(config.InstanceName)
 		if instanceName != "" {
@@ -101,7 +103,7 @@ func Run(repo *util.Repo, config *RunConfig) error {
 		}
 	} else if config.ImageName != "" && config.InstanceName != "" {
 		// Both ImageName and InstanceName are specified
-		fmt.Println("debug: Both ImageName and InstanceName are specified")
+		fmt.Println("Run: Both ImageName and InstanceName are specified")
 		if f, err := os.Stat(config.ImageName); (f != nil && f.IsDir()) || os.IsNotExist(err) {
 			if repo.ImageExists(config.Hypervisor, config.ImageName) {
 				path = repo.ImagePath(config.Hypervisor, config.ImageName)
@@ -143,15 +145,15 @@ func Run(repo *util.Repo, config *RunConfig) error {
 		deleteInstance(config.InstanceName)
 	} else if config.ImageName == "" && config.InstanceName == "" {
 		// Valid only when Capstanfile is present
-		fmt.Println("debug:  no params... Capstanfile is present")
+		fmt.Println("Run: no params... Capstanfile is present with config", config, "----")
 		config.ImageName = repo.DefaultImage()
 		config.InstanceName = config.ImageName
 		if config.ImageName == "" {
-			return fmt.Errorf("error: No Capstanfile found, unable to run.")
+			return fmt.Errorf("Run: No Capstanfile found, unable to run.  ----")
 		}
 		if !repo.ImageExists(config.Hypervisor, config.ImageName) {
 			if !core.IsTemplateFile("Capstanfile") {
-				return fmt.Errorf("%s: no such image", config.ImageName)
+				return fmt.Errorf("%s: no such image %s", config.ImageName, "----")
 			}
 			image := &core.Image{
 				Name:       config.ImageName,
@@ -161,6 +163,7 @@ func Run(repo *util.Repo, config *RunConfig) error {
 			if err != nil {
 				return err
 			}
+
 			if err := Build(repo, image, template, config.Verbose, config.Memory); err != nil {
 				return err
 			}
