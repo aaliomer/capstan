@@ -54,13 +54,14 @@ func DeleteVM(name string) error {
 		Image:       filepath.Join(dir, "disk.qcow2"),
 		ConfigFile:  filepath.Join(dir, "osv.config"),
 	}
-	cmd := exec.Command("rm", "-f", c.Image, " ", c.Monitor, " ", c.ConfigFile)
+	fmt.Println("qemu: rm", "-f", c.Image, " ", c.Monitor, " ", c.ConfigFile, "----")
+	cmd := exec.Command("rm", "-f", c.Image, " ", c.Monitor, " ", c.ConfigFile, "----")
 	_, err := cmd.Output()
 	if err != nil {
 		fmt.Printf("rm failed: %s, %s", c.Image, c.Monitor)
 		return err
 	}
-
+	fmt.Println("qemu: rmdir", c.InstanceDir)
 	cmd = exec.Command("rmdir", c.InstanceDir)
 	_, err = cmd.Output()
 	if err != nil {
@@ -154,6 +155,7 @@ func VMCommand(c *VMConfig, extra ...string) (*exec.Cmd, error) {
 		newDisk := dir + "/disk.qcow2"
 
 		if _, err := os.Stat(newDisk); os.IsNotExist(err) {
+			fmt.Println("qemu: ", "qemu-img", "create", "-f", "qcow2", "-o", backingFile, newDisk)
 			cmd := exec.Command("qemu-img", "create", "-f", "qcow2", "-o", backingFile, newDisk)
 			_, err = cmd.Output()
 			if err != nil {
@@ -179,6 +181,7 @@ func VMCommand(c *VMConfig, extra ...string) (*exec.Cmd, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("qemu: ", path, args, "----")
 	cmd := exec.Command(path, args...)
 	return cmd, nil
 }
